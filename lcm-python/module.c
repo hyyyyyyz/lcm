@@ -9,6 +9,13 @@
     #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
 #endif
 
+// to support python 3.11+ (Py_TYPE is now read-only)
+#if PY_VERSION_HEX < 0x030900A4 && !defined(Py_SET_TYPE)
+static inline void _Py_SET_TYPE(PyObject *ob, PyTypeObject *type)
+{ ob->ob_type = type; }
+#define Py_SET_TYPE(ob, type) _Py_SET_TYPE((PyObject*)(ob), type)
+#endif
+
 extern PyTypeObject pylcmeventlog_type;
 extern PyTypeObject pylcm_type;
 extern PyTypeObject pylcm_subscription_type;
@@ -40,9 +47,9 @@ init_lcm (void)
 {
     PyObject *m;
 
-    Py_TYPE(&pylcmeventlog_type) = &PyType_Type;
-    Py_TYPE(&pylcm_type) = &PyType_Type;
-    Py_TYPE(&pylcm_subscription_type) = &PyType_Type;
+    Py_SET_TYPE(&pylcmeventlog_type, &PyType_Type);
+    Py_SET_TYPE(&pylcm_type, &PyType_Type);
+    Py_SET_TYPE(&pylcm_subscription_type, &PyType_Type);
 
     MOD_DEF(m, "_lcm", lcmmod_doc, lcmmod_methods);
 
