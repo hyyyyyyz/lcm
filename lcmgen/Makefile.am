@@ -11,10 +11,7 @@ lcm_gen_SOURCES = main.c \
 				 tokenize.h \
 				 emit_c.c \
 				 emit_cpp.c \
-				 emit_java.c \
-				 emit_csharp.c \
-				 emit_python.c \
-				 emit_lua.c
+				 emit_python.c
 
 lcm_gen_LDADD = $(GLIB_LIBS)
 
